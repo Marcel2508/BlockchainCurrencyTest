@@ -43,13 +43,13 @@ class Transaction{
 }
 
 class Block{
-    constructor(index,timestamp,transactions,previousHash){
+    constructor(index,timestamp,transactions,previousHash,randomness,hash){
         this.index = index;
         this.timestamp=timestamp;
         this.transactions=transactions;
         this.previousHash=previousHash;
-        this.randomness = 0;
-        this.computeHash();
+        this.randomness = randomness===undefined?0:randomness;
+        hash?this.hash=hash:this.computeHash();
     }
     get getLiveHash(){
         return sha256(this.toStringWithoutHash());
@@ -67,8 +67,10 @@ class Block{
 }
 
 class Blockchain{
-    constructor(difficulty,filedata){
+    constructor(difficulty,chaindata){
         this.difficulty=difficulty;
+
+        //if(chaindata)
         this.chain = [this.getFirstBlock()];
         this.pendingTransactions = [];
     }
